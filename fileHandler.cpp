@@ -1,29 +1,27 @@
 #include <fstream>
+#include <vector>
 
 using namespace std;
 
-void** decryptFile(const char* fileName, const void* (func)(char*)) {
+vector<void*> decryptFile(string fileName, void* (func)(string)) {
     ifstream File(fileName);
 
     string line;
-    void** result = NULL;
     int count = 0;
+    vector<void*> resultVector;
+
     while (getline(File, line)) {
-        result = (void**)realloc(result, sizeof(void*) * (++count));
-        result[count - 1] = func(buffer);
+        resultVector.push_back(func(line));
     }
 
-    return result;
+    return resultVector;
 }
 
-void encryptFile(const char* fileName, const char* (func)(void*)) {
-    FILE* file = fopen(fileName, "w");
-    if (!file) {
-        return;
-    }
+void encryptFile(string fileName, const string (func)(void*), vector<void*> data) {
+    ofstream File(fileName);
 
-    void** result = decryptFile(fileName, func);
-    for (int i = 0; i < count; i++) {
-        fprintf(file, "%s", result[i]);
+    int size = data.size();
+    for (int i = 0; i < size; i++) {
+        File << func(data[i]) << endl;
     }
 }
