@@ -3,7 +3,7 @@
 #include <sstream>
 using namespace std;
 
-Iris::Iris(double sepalLength, double sepalWidth, double petalLength, double petalWidth, IrisType type) : Point(vector<double>{sepalLength, sepalWidth, petalLength, petalWidth}) {
+Iris::Iris(double sepalLength, double sepalWidth, double petalLength, double petalWidth, string type) : Point(vector<double>{sepalLength, sepalWidth, petalLength, petalWidth}) {
     this->type = type;
 }
 
@@ -23,12 +23,12 @@ double Iris::getPetalWidth() {
     return fields[3];
 }
 
-Iris::IrisType Iris::getIrisType(string type) {
-    if (type == "Iris-setosa") {
-        return Iris::IrisType::SETOSA;
-    } else if (type == "Iris-virginica") {
-        return Iris::IrisType::VIRGINICA;
-    } else {
-        return Iris::IrisType::VERSICOLOR;
-    }
+string Iris::toString() {
+    stringstream ss;
+    ss << "Sepal length: " << getSepalLength() << endl;
+    ss << "Sepal width: " << getSepalWidth() << endl;
+    ss << "Petal length: " << getPetalLength() << endl;
+    ss << "Petal width: " << getPetalWidth() << endl;
+    ss << "Type: " << type << endl;
+    return ss.str();
 }

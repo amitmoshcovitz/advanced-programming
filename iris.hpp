@@ -9,22 +9,8 @@ using namespace std;
 
 class Iris : Point {
 
-    public:
-    enum IrisType {
-        SETOSA,
-        VIRGINICA,
-        VERSICOLOR
-    };
-
-    /**
-    * Gets the type of the iris from the string.
-    * @param line string to get the type from
-    * @return type of the iris
-    */
-    static IrisType getIrisType(string type);
-
     private:
-    IrisType type;
+    string type;
 
     public:
     /**
@@ -35,7 +21,7 @@ class Iris : Point {
      * @param petalWidth petal width
      * @param type type
      */
-    Iris(double sepalLength, double sepalWidth, double petalLength, double petalWidth, IrisType type);
+    Iris(double sepalLength, double sepalWidth, double petalLength, double petalWidth, string type);
 
     /**
      * Get sepal length.
@@ -62,9 +48,15 @@ class Iris : Point {
     double getPetalWidth();
 
     /**
-     * Get type.
-     * @return type
+     * Get type string.
+     * @return type string
      */
-    IrisType getType();
+    string getType();
+
+    /**
+     * Get the string representation of the iris.
+     * @return string representation of the iris
+     */
+    string toString();
 };
 #endif
