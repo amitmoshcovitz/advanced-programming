@@ -12,10 +12,14 @@ using namespace std;
  */
 Iris decryptToIris(string line) {
     vector<string> fields = split(line, ',');
-    return Iris(stod(fields[0]), stod(fields[1]), stod(fields[2]), stod(fields[3]), Iris::getIrisType(fields[4]));
+    return Iris(stod(fields[0]), stod(fields[1]), stod(fields[2]), stod(fields[3]), fields[4]);
 }
 
 int main(int argc, char const *argv[]) {
-    vector<Iris> irisData = decryptFile("iris.csv", decryptToIris);
+    vector<Iris> irises = decryptFile("classified.csv", decryptToIris);
+    int size = irises.size();
+    for (int i = 0; i < size; i++) {
+        cout << irises[i].toString() << endl;
+    }
     return 0;
 }
