@@ -16,6 +16,6 @@ Iris decryptToIris(string line) {
 }
 
 int main(int argc, char const *argv[]) {
-    vector<Iris> irisData = decryptFile<Iris>("iris.csv", decryptToIris);
+    vector<Iris> irisData = decryptFile("iris.csv", decryptToIris);
     return 0;
 }

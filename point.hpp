@@ -1,3 +1,6 @@
+#ifndef _POINT
+#define _POINT
+
 #include <vector>
 using namespace std;
 
@@ -37,3 +40,4 @@ class Point {
      */
     double getChebyshevDistance(Point other);
 };
+#endif
