@@ -1,25 +1,25 @@
-#include "fileHandler.hpp"
-#include "iris.hpp"
+#include "fileHandler.h"
+#include "point.h"
 #include <iostream>
+#include <map>
 #include <vector>
 
 using namespace std;
 
-/**
- * Converts a line into an Iris object.
- * @param line line to convert
- * @return Iris object
- */
-Iris decryptToIris(string line) {
-    vector<string> fields = split(line, ',');
-    return Iris(stod(fields[0]), stod(fields[1]), stod(fields[2]), stod(fields[3]), fields[4]);
-}
-
 int main(int argc, char const *argv[]) {
-    vector<Iris> irises = decryptFile("classified.csv", decryptToIris);
-    int size = irises.size();
-    for (int i = 0; i < size; i++) {
-        cout << irises[i].toString() << endl;
+    int k = stoi(argv[1]);
+    map<Point, string> points = decryptFile("classified.csv");
+    int size = points.size();
+    vector<Point> pointsVector = vector<Point>(size);
+    int i = 0;
+    for (auto &point : points) {
+        pointsVector[i] = point.first;
+        i++;
+    }
+    Point reference = Point("0,0,0,0");
+    vector<Point> kNearest = reference.getKClosest(pointsVector, Point::DistanceMetric::EUCLIDEAN, k);
+    for (auto &point : kNearest) {
+        cout << points[point] << endl;
     }
     return 0;
 }
