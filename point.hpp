@@ -1,10 +1,13 @@
+#include <vector>
+using namespace std;
+
 class Point {
 
     protected:
-    double* fields;
-    int fieldsLength;
+    vector<double> fields;
+    int size;
 
-    public:
+    public: 
 
     /**
      * Constructor.
