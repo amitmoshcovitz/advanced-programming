@@ -1,7 +1,11 @@
+#include <vector>
+
+using namespace std;
+
 class Point {
 
     protected:
-    double* fields;
+    vector<double> fields;
     int fieldsLength;
 
     public:
