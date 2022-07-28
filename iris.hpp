@@ -1,5 +1,10 @@
 #include "point.hpp"
 
+#include <string>
+#include <vector>
+using namespace std;
+#pragma once
+
 class Iris : Point {
 
     public:
