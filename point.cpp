@@ -79,13 +79,9 @@ vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric
         return a.second < b.second;
     });
 
-    auto test = [](pair<Point, double> a, pair<Point, double> b) {
-        return a.second < b.second;
-    };
-
-    vector<Point> kClosest;
+    vector<Point> kClosest = vector<Point>(k);
     for (int i = 0; i < k; i++) {
-        kClosest.push_back(distances[i].first);
+        kClosest[i] = distances[i].first;
     }
 
     return kClosest;
