@@ -1,9 +1,11 @@
+#include "algorithms.h"
 #include <math.h>
 #include <vector>
 #include "point.h"
 #include <random>
 #include "fileHandler.h"
 #include <sstream>
+#include <iostream>
 
 using namespace std;
 
@@ -52,10 +54,7 @@ double Point::getChebyshevDistance(Point other) const {
 vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric distanceType, int k) const {
 
     int size = otherPoints.size();
-    vector<Point> copyPoints = vector<Point>(size);
-    for (int i = 0; i < size; i++) {
-        copyPoints[i] = otherPoints[i];
-    }
+    if (size == 0) return vector<Point>();
     
     double (Point::*distance)(Point) const;
     switch (distanceType) {
@@ -70,47 +69,23 @@ vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric
             break;
     }
     
-    vector<double> otherDistance = vector<double>(size);
+    vector<pair<Point, double>> distances = vector<pair<Point, double>>(size);
     for (int i = 0; i < size; i++) {
-        otherDistance[i] = ((this->*distance)(copyPoints[i]));
+        distances[i].first = otherPoints[i];
+        distances[i].second = (this->*distance)(otherPoints[i]);
     }
 
-    random_device rd;
-    mt19937 gen(rd());
-    uniform_int_distribution<> distr(0, size);
+    kthSmallest<pair<Point, double>>(&distances, k, [](pair<Point, double> a, pair<Point, double> b) {
+        return a.second < b.second;
+    });
 
-    int minIndex = 0, maxIndex = size - 1;
-    while (minIndex != maxIndex) {
-        
-        int divideIndex = distr(gen);
-        double pivot = otherDistance[divideIndex];
-
-        int left = minIndex, right = maxIndex;
-        while (left < right) {
-            while (otherDistance[left++] <= pivot);
-            while (otherDistance[right--] >= pivot);
-            if (left >= right) {
-                break;
-            }
-            left--; right++;
-            if (divideIndex == left) {
-                divideIndex = right;
-            } else if (divideIndex == right) {
-                divideIndex = left;
-            }
-            swap(otherDistance[left], otherDistance[right]);
-            swap(copyPoints[left], copyPoints[right]);
-        }
-        if (divideIndex > k) {
-            maxIndex = divideIndex - 1;
-        } else {
-            minIndex = divideIndex;
-        }
-    }
+    auto test = [](pair<Point, double> a, pair<Point, double> b) {
+        return a.second < b.second;
+    };
 
     vector<Point> kClosest;
     for (int i = 0; i < k; i++) {
-        kClosest.push_back(copyPoints[i]);
+        kClosest.push_back(distances[i].first);
     }
 
     return kClosest;
@@ -122,6 +97,21 @@ string Point::toString() const {
     for (int i = 0; i < size; i++) {
         ss << fields[i] << ",";
     }
-    return ss.str();
+    string str = ss.str();
+    return str.substr(0, str.size() - 1);
 }
 
+bool Point::operator<(const Point &other) const {
+    return this->fields < other.fields;
+}
+
+string Point::toString(DistanceMetric distanceType) {
+    switch (distanceType) {
+        case EUCLIDEAN:
+            return "euclidean";
+        case MANHATTAN:
+            return "manhattan";
+        default:
+            return "chebyshev";
+    }
+}

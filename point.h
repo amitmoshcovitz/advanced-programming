@@ -66,5 +66,18 @@ class Point {
     * @return string representation of this point
     */
     string toString() const;
+
+    /**
+     * Get the string representation of the DistanceMetric.
+     * @return string representation of the DistanceMetric
+     */
+    static string toString(DistanceMetric distanceType);
+
+    /**
+     * Compare this point with other point.
+     * @param other other point
+     * @return true if this point is less than the other point, false otherwise
+     */
+    bool operator<(const Point& other) const;
 };
 #endif
