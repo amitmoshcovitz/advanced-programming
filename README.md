@@ -53,41 +53,18 @@ To clone and run this application, you'll need [Git](https://git-scm.com) instal
 $ git clone https://github.com/amitmoshcovitz/advanced-programming
 
 # Go into the repository
-$ cd electron-markdownify
+$ cd advanced-programming
 
-# Install dependencies
-$ npm install
+# Copy the input files: 'classified.csv' and 'unclassified.csv' to the 'input' folder
+$ mv *classified.csv input
 
-# Run the app
-$ npm start
+# Compile the program
+$ g++ *.cpp -o main
+
+# Run the program, inputting k as the first argument
+$ ./main k
 ```
-
-> **Note**
-> If you're using Linux Bash for Windows, [see this guide](https://www.howtogeek.com/261575/how-to-run-graphical-linux-desktop-applications-from-windows-10s-bash-shell/) or use `node` from the command prompt.
-
-
-## Download
-
-You can [download](https://github.com/amitmoshcovitz/advanced-programming) the latest installable version of this program for Windows, macOS and Linux.
 
 ## Emailware
 
-Markdownify is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or it has helped you in any way, I'd like you send me an email at <nahum@gmail.com> about anything you'd want to say about this software. I'd really appreciate it!
-
-## Credits
-
-This software uses the following open source packages:
-
-- [example](https://example.com/)
-- [example](https://example.com/)
-- [example](https://example.com/)
-- [example](https://example.com/)
-- [example](https://example.com/)
-- [example](https://example.com/)
-- [example](https://example.com/)
-
-
-## You may also like...
-
-- [Other Project](https://example.com/) - A pomodoro app
-- [Website](https://example.com/) - A menubar/taskbar Gmail App for Windows and macOS
+This repository is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or are inspired by the beautiful coding, I'd like you send me an email at <yoavnahum2005@gmail.com> about anything you'd want to say about this masterpiece. I'd really appreciate it!
