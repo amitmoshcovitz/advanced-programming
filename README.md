@@ -65,4 +65,4 @@ $ ./main k
 
 ## Emailware
 
-This repository is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or are inspired by the beautiful coding, I'd like you send me an email at <yoavnahum2005@gmail.com> about anything you'd want to say about this masterpiece. I'd really appreciate it!
+This repository is an [emailware](https://en.wiktionary.org/wiki/emailware). Meaning, if you liked using this app or are inspired by the beautiful coding, I'd like you to send me an email at <yoavnahum2005@gmail.com> about anything you'd want to say about this masterpiece. I'd really appreciate it!
