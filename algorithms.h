@@ -37,7 +37,7 @@ int partition(vector<T>* vector, int left, int right, bool(*compare)(T, T)) {
  */
 template <typename T>
 T kthSmallest(vector<T>* vector, int k, bool(*compare)(T, T)) {
-    int left = 0, right = (*vector).size() - 1;
+    int left = 0, right = vector->size() - 1;
     while (left <= right) {
         int pivotIndex = partition(vector, left, right, compare);
         if (pivotIndex == k - 1)

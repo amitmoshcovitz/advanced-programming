@@ -6,34 +6,32 @@
 
 using namespace std;
 
-map<std::unique_ptr<Point>, string> decryptClassifiedFile(string fileName) {
-    map<std::unique_ptr<Point>, string> decryptedFile;
+map<Point*, std::string>* decryptClassifiedFile(std::string fileName) {
+    map<Point*, std::string>* decryptedFile = new map<Point*, std::string>();
     ifstream file(fileName);
-    string line;
+    std::string line;
     int lineNumber = 0;
     while (getline(file, line)) {
         int seperatorIndex = line.find_last_of(",");
-        std::unique_ptr<Point> p(new Point(line.substr(0, seperatorIndex)));
-        decryptedFile[std::move(p)] = line.substr(seperatorIndex + 1);
+        (*decryptedFile)[new Point(line.substr(0, seperatorIndex))] = line.substr(seperatorIndex + 1);
     }
     file.close();
     return decryptedFile;
 }
 
-vector<std::unique_ptr<Point>> decryptUnclassifiedFile(string fileName) {
-    vector<std::unique_ptr<Point>> decryptedFile;
+vector<Point*>* decryptUnclassifiedFile(std::string fileName) {
+    vector<Point*>* decryptedFile = new vector<Point*>();
     ifstream file(fileName);
-    string line;
+    std::string line;
     int lineNumber = 0;
     while (getline(file, line)) {
-        std::unique_ptr<Point> p(new Point(line));
-        decryptedFile.push_back(std::move(p));
+        decryptedFile->push_back(new Point(line));
     }
     file.close();
     return decryptedFile;
 }
 
-void encryptFile(string fileName, map<std::unique_ptr<Point>, string> data) {
+void encryptFile(std::string fileName, map<Point*, std::string> data) {
     ofstream file(fileName);
     for (auto it = data.begin(); it != data.end(); it++) {
         file << it->first->toString() << "," << it->second << endl;

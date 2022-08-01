@@ -9,8 +9,8 @@
 
 using namespace std;
 
-Point::Point(string data) {
-    vector<string> unhandleFields = split(data, ',');
+Point::Point(std::string data) {
+    vector<std::string> unhandleFields = split(data, ',');
     int size = unhandleFields.size();
     vector<double> fields = vector<double>(size);
     for (int i = 0; i < size; i++) {
@@ -51,10 +51,10 @@ double Point::getChebyshevDistance(Point other) const {
     return max;
 }
 
-vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric distanceType, int k) const {
+vector<Point*> Point::getKClosest(const vector<Point*>* otherPoints, DistanceMetric distanceType, int k) const {
 
-    int size = otherPoints.size();
-    if (size == 0) return vector<Point>();
+    int size = otherPoints->size();
+    if (size == 0) return vector<Point*>();
     
     double (Point::*distance)(Point) const;
     switch (distanceType) {
@@ -69,31 +69,38 @@ vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric
             break;
     }
     
-    vector<pair<Point, double>> distances = vector<pair<Point, double>>(size);
+    vector<pair<Point*, double>>* distances = new vector<pair<Point*, double>>(size);
     for (int i = 0; i < size; i++) {
-        distances[i].first = otherPoints[i];
-        distances[i].second = (this->*distance)(otherPoints[i]);
+        (*distances)[i].first = (*otherPoints)[i];
+        (*distances)[i].second = (this->*distance)(*(*otherPoints)[i]);
     }
 
-    kthSmallest<pair<Point, double>>(&distances, k, [](pair<Point, double> a, pair<Point, double> b) {
+    kthSmallest<pair<Point*, double>>(distances, k, [](pair<Point*, double> a, pair<Point*, double> b) {
         return a.second < b.second;
     });
 
-    vector<Point> kClosest = vector<Point>(k);
+    vector<Point*> kClosest = vector<Point*>(k);
     for (int i = 0; i < k; i++) {
-        kClosest[i] = distances[i].first;
+        kClosest[i] = (*distances)[i].first;
     }
+
+    for (int i = 0; i < size; i++) {
+        (*distances)[i].first = nullptr;
+    }
+
+    delete distances;
+    
 
     return kClosest;
 }
 
 
-string Point::toString() const {
+std::string Point::toString() const {
     stringstream ss;
     for (int i = 0; i < size; i++) {
         ss << fields[i] << ",";
     }
-    string str = ss.str();
+    std::string str = ss.str();
     return str.substr(0, str.size() - 1);
 }
 
@@ -101,7 +108,7 @@ bool Point::operator<(const Point &other) const {
     return this->fields < other.fields;
 }
 
-string Point::toString(DistanceMetric distanceType) {
+std::string Point::toString(DistanceMetric distanceType) {
     switch (distanceType) {
         case EUCLIDEAN:
             return "euclidean";

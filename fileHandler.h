@@ -13,14 +13,14 @@ using namespace std;
  * @param fileName name of the file
  * @return map of decrypted objects
  */
-map<std::unique_ptr<Point>, string> decryptClassifiedFile(string fileName);
+map<Point*, string>* decryptClassifiedFile(string fileName);
 
 /**
  * Reads a file and decrypts it.
  * @param fileName name of the file
  * @return vector of unclassified points
  */
-vector<std::unique_ptr<Point>> decryptUnclassifiedFile(string fileName);
+vector<Point*>* decryptUnclassifiedFile(string fileName);
 
 /**
  * Writes a file and encrypts the data to it.
@@ -28,5 +28,5 @@ vector<std::unique_ptr<Point>> decryptUnclassifiedFile(string fileName);
  * @param func function to encrypt to the file
  * @param data map of encrypted objects
  */
-void encryptFile(string fileName, map<Point, string> data);
+void encryptFile(string fileName, map<Point*, string> data);
 #endif
