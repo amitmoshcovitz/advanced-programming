@@ -15,9 +15,9 @@ using namespace std;
  * @param k the number of neighbors to use
  * @return the classification of the point
  */
-string classify(Point unclassified, map<Point, string> points, Point::DistanceMetric distanceType, int k) {
+string classify(std::unique_ptr<Point> unclassified, map<std::unique_ptr<Point>, string> points, Point::DistanceMetric distanceType, int k) {
     int size = points.size();
-    vector<Point> pointsVector = vector<Point>(size);
+    vector<std::unique_ptr<Point>> pointsVector = vector<std::unique_ptr<Point>>(size);
     int i = 0;
     for (auto &point : points) {
         pointsVector[i] = point.first;
@@ -39,22 +39,17 @@ string classify(Point unclassified, map<Point, string> points, Point::DistanceMe
 
 int main(int argc, char const *argv[]) {
     int k = stoi(argv[1]);
-    map<Point, string> points = decryptClassifiedFile("input/classified.csv");
-    int size = points.size();
-    vector<Point> pointsVector = vector<Point>(size);
-    int i = 0;
-    for (auto &point : points) {
-        pointsVector[i] = point.first;
-        i++;
-    }
-    vector<Point> unclassified = decryptUnclassifiedFile("input/unclassified.csv");
+    map<std::unique_ptr<Point>, string> points = decryptClassifiedFile("input/classified.csv");
+    vector<std::unique_ptr<Point>> unclassified = decryptUnclassifiedFile("input/unclassified.csv");
     for (int i = 0; i < 3; i++) {
         string outputFile = "out/" + Point::toString((Point::DistanceMetric)i) + "_output.csv";
         ofstream file(outputFile);
-        for (Point unclassifiedPoint : unclassified) {
-            string type = classify(unclassifiedPoint, points, (Point::DistanceMetric)i, k);
+
+        int tempSize = unclassified.size();
+        for (size_t i = 0; i < tempSize; i++) {
+            string type = classify(std::move(unclassified[i]), points, (Point::DistanceMetric)i, k);
             file << type << endl;
-        }
+        } //need to return because of the vector of destructer pointers.
     }
     return 0;
 }
