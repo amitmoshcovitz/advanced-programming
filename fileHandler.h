@@ -28,5 +28,5 @@ vector<Point> decryptUnclassifiedFile(string fileName);
  * @param func function to encrypt to the file
  * @param data map of encrypted objects
  */
-void encryptFile(string fileName, map<Point, string> data);
+void encryptFile(string& fileName, map<Point, string>& data);
 #endif

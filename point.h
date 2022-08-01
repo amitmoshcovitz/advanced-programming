@@ -30,21 +30,21 @@ class Point {
      * @param other other point
      * @return Euclidean distance
      */
-    double getEuclideanDistance(Point other) const;
+    double getEuclideanDistance(const Point& other) const;
     
     /**
      * Get Manhattan distance between this point and other point.
      * @param other other point
      * @return Manhattan distance
      */
-    double getManhattanDistance(Point other) const;
+    double getManhattanDistance(const Point& other) const;
 
     /**
      * Get Chebyshev distance between this point and other point.
      * @param other other point
      * @return Chebyshev distance
      */
-    double getChebyshevDistance(Point other) const;
+    double getChebyshevDistance(const Point& other) const;
 
     enum DistanceMetric {
         EUCLIDEAN,
@@ -59,7 +59,7 @@ class Point {
      * @param k number of neighbors
      * @return the k nearest neighbors
      */
-    vector<Point> getKClosest(vector<Point> otherPoints, DistanceMetric distanceType, int k) const;
+    vector<Point> getKClosest(const vector<Point>& otherPoints, DistanceMetric distanceType, int k) const;
 
     /**
     * Get the string representation of this point.

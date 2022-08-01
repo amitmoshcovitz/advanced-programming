@@ -15,7 +15,7 @@ using namespace std;
  * @param k the number of neighbors to use
  * @return the classification of the point
  */
-string classify(Point unclassified, map<Point, string> points, Point::DistanceMetric distanceType, int k) {
+string classify(Point unclassified, map<Point, string>& points, Point::DistanceMetric distanceType, int k) {
     int size = points.size();
     vector<Point> pointsVector = vector<Point>(size);
     int i = 0;

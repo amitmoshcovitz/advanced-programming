@@ -3,7 +3,7 @@
 
 using namespace std;
 
-vector<string> split(string line, char delimiter) {
+vector<string> split(string& line, char delimiter) {
     vector<string> resultVector;
     stringstream stringStream(line);
     string item;

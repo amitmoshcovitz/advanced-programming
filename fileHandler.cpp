@@ -31,7 +31,7 @@ vector<Point> decryptUnclassifiedFile(string fileName) {
     return decryptedFile;
 }
 
-void encryptFile(string fileName, map<Point, string> data) {
+void encryptFile(string fileName, map<Point, string>& data) {
     ofstream file(fileName);
     for (auto it = data.begin(); it != data.end(); it++) {
         file << it->first.toString() << "," << it->second << endl;

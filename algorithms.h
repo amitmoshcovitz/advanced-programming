@@ -15,16 +15,16 @@ using namespace std;
  * @return the index of the pivot
  */
 template <typename T>
-int partition(vector<T>* vector, int left, int right, bool(*compare)(T, T)) {
-    T pivot = (*vector)[right];
+int partition(vector<T>& vector, int left, int right, bool(*compare)(T, T)) {
+    T pivot = vector[right];
     int i = (left - 1);
     for (int j = left; j <= right - 1; j++) {
-        if (!compare(pivot, (*vector)[j])) {
+        if (!compare(pivot, vector[j])) {
             i++;
-            swap((*vector)[i], (*vector)[j]);
+            swap(vector[i], vector[j]);
         }
     }
-    swap((*vector)[i + 1], (*vector)[right]);
+    swap(vector[i + 1], vector[right]);
     return (i + 1);
 }
 
@@ -36,18 +36,18 @@ int partition(vector<T>* vector, int left, int right, bool(*compare)(T, T)) {
  * @return the kth smallest element
  */
 template <typename T>
-T kthSmallest(vector<T>* vector, int k, bool(*compare)(T, T)) {
-    int left = 0, right = (*vector).size() - 1;
+T kthSmallest(vector<T>& vector, int k, bool(*compare)(T, T)) {
+    int left = 0, right = vector.size() - 1;
     while (left <= right) {
         int pivotIndex = partition(vector, left, right, compare);
         if (pivotIndex == k - 1)
-            return (*vector)[pivotIndex];
+            return vector[pivotIndex];
         else if (pivotIndex > k - 1)
             right = pivotIndex - 1;
         else
             left = pivotIndex + 1;
     }
-    return (*vector)[k - 1];
+    return vector[k - 1];
 }
 
 /**
@@ -56,5 +56,5 @@ T kthSmallest(vector<T>* vector, int k, bool(*compare)(T, T)) {
  * @param delimiter delimiter to split the string with
  * @return vector of strings
  */
-vector<string> split(string line, char delimiter);
+vector<string> split(string& line, char delimiter);
 #endif

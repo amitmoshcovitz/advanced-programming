@@ -25,7 +25,7 @@ Point::Point() {
     this->size = 0;
 }
 
-double Point::getEuclideanDistance(Point other) const {
+double Point::getEuclideanDistance(const Point& other) const {
     double distance = 0;
     for (int i = 0; i < size; i++) {
         distance += pow(fields[i] - other.fields[i], 2);
@@ -33,7 +33,7 @@ double Point::getEuclideanDistance(Point other) const {
     return sqrt(distance);
 }
 
-double Point::getManhattanDistance(Point other) const {
+double Point::getManhattanDistance(const Point& other) const {
     double distance = 0;
     for (int i = 0; i < size; i++) {
         distance += abs(fields[i] - other.fields[i]);
@@ -41,7 +41,7 @@ double Point::getManhattanDistance(Point other) const {
     return distance;
 }
 
-double Point::getChebyshevDistance(Point other) const {
+double Point::getChebyshevDistance(const Point& other) const {
     double max = 0;
     for (int i = 0; i < size; i++) {
         if (abs(fields[i] - other.fields[i]) > max) {
@@ -51,12 +51,12 @@ double Point::getChebyshevDistance(Point other) const {
     return max;
 }
 
-vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric distanceType, int k) const {
+vector<Point> Point::getKClosest(const vector<Point>& otherPoints, DistanceMetric distanceType, int k) const {
 
     int size = otherPoints.size();
     if (size == 0) return vector<Point>();
     
-    double (Point::*distance)(Point) const;
+    double (Point::*distance)(const Point&) const;
     switch (distanceType) {
         case EUCLIDEAN:
             distance = &Point::getEuclideanDistance;
@@ -75,7 +75,7 @@ vector<Point> Point::getKClosest(const vector<Point> otherPoints, DistanceMetric
         distances[i].second = (this->*distance)(otherPoints[i]);
     }
 
-    kthSmallest<pair<Point, double>>(&distances, k, [](pair<Point, double> a, pair<Point, double> b) {
+    kthSmallest<pair<Point, double>>(distances, k, [](pair<Point, double> a, pair<Point, double> b) {
         return a.second < b.second;
     });
 
