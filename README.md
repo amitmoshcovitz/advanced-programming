@@ -13,7 +13,8 @@
 <p align="center">
   <a href="#team">Team</a> •
   <a href="#key-features">Key Features</a> •
-  <a href="#how-to-use">How To Use</a>
+  <a href="#how-to-use">How To Use</a> •
+  <a href="#optimization">Optimization</a>
 </p>
 
 
@@ -58,6 +59,9 @@ $ g++ *.cpp -o main
 # Run the program, inputting k as the first argument
 $ ./main k
 ```
+
+## Optimization
+* Find k closest objects in O(n) time complexit using the select algorithm.
 
 ## Emailware
 
