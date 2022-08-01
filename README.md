@@ -63,8 +63,8 @@ $ ./main k
 ## Implementation
 * A point class that represent a generic point in space.
 * The classification of every point is saved in a map. The key is the reference and the value is a string representation of the classification.
-* Find k closest objects in O(n) time complexit using the select algorithm.
-* Iterating the k closest points and deciding the classification of the object based on the largest number of simular points3.
+* Find k closest objects in O(n) time complexity using the quick select algorithm.
+* Iterating the k closest points and deciding the classification of the object based on the largest number of simular points.
 
 ## Emailware
 
