@@ -34,7 +34,7 @@
 
 ## Key Features
 
-* Classify an object.
+* Classify objects.
   - Dynamic value, choose your own classification constance.
   - Lots of distances options (Euclidean, Chebyshev...).
 
