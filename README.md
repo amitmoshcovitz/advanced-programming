@@ -14,7 +14,7 @@
   <a href="#team">Team</a> •
   <a href="#key-features">Key Features</a> •
   <a href="#how-to-use">How To Use</a> •
-  <a href="#optimization">Optimization</a>
+  <a href="#implementation">Implementation</a>
 </p>
 
 
@@ -60,8 +60,11 @@ $ g++ *.cpp -o main
 $ ./main k
 ```
 
-## Optimization
+## Implementation
+* A point class that represent a generic point in space.
+* The classification of every point is saved in a map. The key is the reference and the value is a string representation of the classification.
 * Find k closest objects in O(n) time complexit using the select algorithm.
+* Iterating the k closest points and deciding the classification of the object based on the largest number of simular points3.
 
 ## Emailware
 
