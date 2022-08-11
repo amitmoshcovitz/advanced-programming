@@ -10,7 +10,6 @@ map<Point, string> decryptClassifiedFile(string fileName) {
     map<Point, string> decryptedFile;
     ifstream file(fileName);
     string line;
-    int lineNumber = 0;
     while (getline(file, line)) {
         int seperatorIndex = line.find_last_of(",");
         decryptedFile[Point(line.substr(0, seperatorIndex))] = line.substr(seperatorIndex + 1);
@@ -23,7 +22,6 @@ vector<Point> decryptUnclassifiedFile(string fileName) {
     vector<Point> decryptedFile;
     ifstream file(fileName);
     string line;
-    int lineNumber = 0;
     while (getline(file, line)) {
         decryptedFile.push_back(Point(line));
     }
