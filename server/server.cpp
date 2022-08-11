@@ -1,17 +1,40 @@
-#include <iostream>
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <sys/socket.h>
-#include <stdio.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
+#include <iostream>
+#include <stdio.h>
 #include <unistd.h>
 #include <string.h>
+#include "point.h"
+#include <map>
+#include <fstream>
+#include "fileHandler.h"
+#include "algorithms.h"
+#include "server.h"
+#define END '\u0003'
 
 using namespace std;
 
-int main() {
+int main(int argc, char const *argv[]) {
+    if (argc <= 3) {
+        return 0;
+    }
+    int k = stoi(argv[2]);
+    Server server(5555, k, Point::EUCLIDEAN);
+    server.loadClassified(argv[1]);
+    server.run();
+    return 0;
+}
 
-    const int server_port = 5555;
 
+Server::Server(int port, int k, Point::DistanceMetric metric) {
+    this->k = k;
+    this->metric = metric;
+    const int server_port = port;
     int sock = socket(AF_INET, SOCK_STREAM, 0);
     if (sock < 0) {
         perror("error creating socket");
@@ -30,36 +53,60 @@ int main() {
     if (listen(sock, 5) < 0) {
         perror("error listening to a socket");
     }
+    this->sock = sock;
+}
 
-    struct sockaddr_in client_sin;
-    unsigned int addr_len = sizeof(client_sin);
-    int client_sock = accept(sock,  (struct sockaddr *) &client_sin,  &addr_len);
+Server::~Server() {
+    close(sock);
+}
 
-    if (client_sock < 0) {
+int Server::getSock() {
+    return sock;
+}
+
+int Server::acceptClient() {
+    struct sockaddr_in clientSin;
+    #ifdef WIN32
+    int addrLen = sizeof(clientSin);
+    #else
+    unsigned int addrLen = sizeof(clientSin);
+    #endif
+    int clientSock = accept(sock,  (struct sockaddr *) &clientSin,  &addrLen);
+
+    if (clientSock < 0) {
         perror("error accepting client");
     }
 
-    char buffer[4096];
-    int expected_data_len = sizeof(buffer);
-    int read_bytes = recv(client_sock, buffer, expected_data_len, 0);
-    if (read_bytes == 0) {
-    // connection is closed
-    }
-    else if (read_bytes < 0) {
-    // error
-    }
-    else {
-        cout << buffer;
-    }
+    return clientSock;
+}
 
-    int sent_bytes = send(client_sock, buffer, read_bytes, 0);
-
-    if (sent_bytes < 0) {
+void Server::sendToClient(int clientSock, const char* buffer, int bufferSize) {
+    int sentBytes = send(clientSock, buffer, bufferSize, 0);
+    if (sentBytes < 0) {
         perror("error sending to client");
     }
+}
 
-    close(sock);
+bool Server::receiveFromClient(int clientSock, char* buffer, int bufferSize) {
+    int readBytes = recv(clientSock, buffer, bufferSize, 0);
+    if (readBytes < 0) {
+        perror("error reading from client");
+    }
+    return buffer[0] != END;
+}
 
+void Server::loadClassified(string fileName) {
+    points = decryptClassifiedFile(fileName);
+}
 
-    return 0;
+void Server::run() {
+    char buffer[4096];
+    int clientSock = acceptClient();
+    int expectedDataLen = sizeof(buffer);
+    while (receiveFromClient(clientSock, buffer, expectedDataLen)) {
+        Point p(buffer);
+        string ans = classify(p, this->points, Point::EUCLIDEAN, 3);
+        sendToClient(clientSock, ans.c_str(), ans.length());
+    }
+    close(clientSock);
 }

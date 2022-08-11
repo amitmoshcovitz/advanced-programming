@@ -1,8 +1,12 @@
 #include <iostream>
+#ifdef WIN32
+#include <windows.h>
+#else
 #include <sys/socket.h>
-#include <stdio.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#endif
+#include <stdio.h>
 #include <unistd.h>
 #include <string>
 #include <client.h>
@@ -12,7 +16,7 @@ using namespace std;
 
 
 int Client::sendLine(std::string line, int socket) {
-    int sent_bytes = send(socket, line, line.size(), 0);
+    int sent_bytes = send(socket, line.c_str(), line.size(), 0);
     if (sent_bytes < 0) {
         return ERROR;
     }
@@ -28,7 +32,8 @@ int Client::sendFile(std::string filePath, int socket) {
             return sent;
         }
     }
-    int sent_bytes = send(socket, {END}, sizeof(END), 0);
+    char end[]{END};
+    int sent_bytes = send(socket, end, sizeof(END), 0);
     if (sent_bytes < 0) {
         file.close();
         return ERROR;

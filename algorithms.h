@@ -3,8 +3,19 @@
 
 #include <vector>
 #include <sstream>
+#include "point.h"
 
 using namespace std;
+
+/**
+ * Classifies a point.
+ * @param unclassified point to classify
+ * @param points the map of points to their classifications
+ * @param distanceType the distance metric to use
+ * @param k the number of neighbors to use
+ * @return the classification of the point
+ */
+string classify(Point unclassified, map<Point, string>& points, Point::DistanceMetric distanceType, int k);
 
 /**
  * Partitions the vector
