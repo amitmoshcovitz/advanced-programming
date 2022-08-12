@@ -6,12 +6,12 @@
 #include <arpa/inet.h>
 #endif
 #include <map>
-#include "point.h"
+#include "../point.h"
 #include <fstream>
 
 class Server {
     private:
-    SOCKET sock;
+    int sock;
     map<Point, string> points;
     int k;
     Point::DistanceMetric metric;

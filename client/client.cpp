@@ -9,17 +9,19 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string>
-#include <client.h>
+#include "client.h"
 
 
 using namespace std;
 
 
 int Client::sendLine(std::string line, int socket) {
+    const char* ptr = line.c_str();
     int sent_bytes = send(socket, line.c_str(), line.size(), 0);
     if (sent_bytes < 0) {
         return ERROR;
     }
+    return SUCCESS;
 }
 
 int Client::sendFile(std::string filePath, int socket) {
@@ -32,8 +34,8 @@ int Client::sendFile(std::string filePath, int socket) {
             return sent;
         }
     }
-    char end[]{END};
-    int sent_bytes = send(socket, end, sizeof(END), 0);
+    char end[]{END, '\0'};
+    int sent_bytes = send(socket, end, sizeof(char) * 2, 0);
     if (sent_bytes < 0) {
         file.close();
         return ERROR;
@@ -44,6 +46,7 @@ int Client::sendFile(std::string filePath, int socket) {
 
 int Client::writeLine(std::string line, std::ofstream outputStream) {
     outputStream << line << std::endl;
+    return SUCCESS;
 }
 
 int Client::getLine(int socket, char* buffer, int bufferSize) {

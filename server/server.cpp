@@ -9,24 +9,26 @@
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
-#include "point.h"
+#include "../point.h"
 #include <map>
 #include <fstream>
-#include "fileHandler.h"
-#include "algorithms.h"
+#include "../fileHandler.h"
+#include "../algorithms.h"
 #include "server.h"
 #define END '\u0003'
 
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-    if (argc <= 3) {
-        return 0;
+    if (argc < 3) {
+        return -1;
     }
+    const int sock_port = 5555;
     int k = stoi(argv[2]);
-    Server server(5555, k, Point::EUCLIDEAN);
+    Server server(sock_port, k, Point::EUCLIDEAN);
     server.loadClassified(argv[1]);
     server.run();
+    close(sock_port);
     return 0;
 }
 
@@ -105,7 +107,7 @@ void Server::run() {
     int expectedDataLen = sizeof(buffer);
     while (receiveFromClient(clientSock, buffer, expectedDataLen)) {
         Point p(buffer);
-        string ans = classify(p, this->points, Point::EUCLIDEAN, 3);
+        string ans = classify(p, this->points, metric, k);
         sendToClient(clientSock, ans.c_str(), ans.length());
     }
     close(clientSock);
