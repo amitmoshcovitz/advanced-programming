@@ -38,6 +38,7 @@
 * Classify objects.
   - Dynamic value, choose your own classification constance.
   - Lots of distances options (Euclidean, Chebyshev...).
+* Works with clients and a main server.
 
 ## How To Use
 
@@ -45,26 +46,39 @@ To clone and run this application, you'll need [Git](https://git-scm.com) instal
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/amitmoshcovitz/advanced-programming
+$ git clone https://github.com/amitmoshcovitz/advanced-programming2
 
 # Go into the repository
 $ cd advanced-programming
 
-# Copy the input files: 'classified.csv' and 'unclassified.csv' to the 'input' folder
-$ mv *classified.csv input
+# Compile the server
+$ g++ *.cpp server/server.cpp -o server.out
 
-# Compile the program
-$ g++ *.cpp -o main
+# Compile the client
+$ g++ client/client.cpp -o client.out
 
-# Run the program, inputting k as the first argument
-$ ./main k
+# Run the server
+$ ./server.out {path to classified file} {the k to run the knn on}
+
+# Run the client
+$ ./client.out {the path unclassified file} {the path to the output file}
 ```
 
 ## Implementation
-* A point class that represent a generic point in space.
-* The classification of every point is saved in a map. The key is the reference and the value is a string representation of the classification.
-* Find k closest objects in O(n) time complexity using the quick select algorithm.
-* Iterating the k closest points and deciding the classification of the object based on the largest number of simular points.
+* The server classification logic:
+- A point class that represent a generic point in space.
+- The classification of every point is saved in a map. The key is the reference and the value is a string representation of the classification.
+- Find k closest objects in O(n) time complexity using the quick select algorithm.
+- Iterating the k closest points and deciding the classification of the object based on the largest number of simular points.
+* The server:
+- Creates a string containing all the information from the socket.
+- Runs the algorithms that was in the previous assignment.
+- Sends the results to the server.
+* The client:
+- Creates a string containing all the information of the provided file.
+- Sends the string to the server.
+- Writing the result to a file.
+
 
 ## Emailware
 
