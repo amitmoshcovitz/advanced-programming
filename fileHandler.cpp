@@ -9,6 +9,9 @@ using namespace std;
 map<Point, string> decryptClassifiedFile(string fileName) {
     map<Point, string> decryptedFile;
     ifstream file(fileName);
+    if (!file.is_open()) {
+        return decryptedFile;
+    }
     string line;
     while (getline(file, line)) {
         int seperatorIndex = line.find_last_of(",");

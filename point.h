@@ -79,5 +79,11 @@ class Point {
      * @return true if this point is less than the other point, false otherwise
      */
     bool operator<(const Point& other) const;
+
+    /**
+     * Returns the dimension of this point.
+     * @return the dimension of this point
+     */
+    int getDimension() const;
 };
 #endif

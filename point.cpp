@@ -111,3 +111,7 @@ string Point::toString(DistanceMetric distanceType) {
             return "chebyshev";
     }
 }
+
+int Point::getDimension() const {
+    return size;
+}

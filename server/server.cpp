@@ -4,6 +4,7 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <sys/time.h>
 #endif
 #include <iostream>
 #include <stdio.h>
@@ -25,6 +26,10 @@ int main(int argc, char const *argv[]) {
     }
     const int sock_port = 5555;
     int k = stoi(argv[2]);
+    if (k < 1) {
+        cout << "k must be greater than 0" << endl;
+        return -1;
+    }
     Server server(sock_port, k, Point::EUCLIDEAN);
     server.loadClassified(argv[1]);
     server.run();
@@ -62,18 +67,27 @@ Server::~Server() {
     close(sock);
 }
 
-int Server::getSock() {
+int Server::getSock() const {
     return sock;
 }
 
-int Server::acceptClient() {
+int Server::acceptClient() const {
     struct sockaddr_in clientSin;
     #ifdef WIN32
     int addrLen = sizeof(clientSin);
     #else
     unsigned int addrLen = sizeof(clientSin);
     #endif
-    int clientSock = accept(sock,  (struct sockaddr *) &clientSin,  &addrLen);
+
+    timeval timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+
+    if (select(0, nullptr, nullptr, nullptr, &timeout) < 0) {
+        return 0;
+    }
+    
+    int clientSock = accept(sock, (struct sockaddr *) &clientSin,  &addrLen);
 
     if (clientSock < 0) {
         perror("error accepting client");
@@ -82,33 +96,65 @@ int Server::acceptClient() {
     return clientSock;
 }
 
-void Server::sendToClient(int clientSock, const char* buffer, int bufferSize) {
+void Server::sendToClient(int clientSock, const char* buffer, int bufferSize) const {
     int sentBytes = send(clientSock, buffer, bufferSize, 0);
     if (sentBytes < 0) {
         perror("error sending to client");
     }
 }
 
-bool Server::receiveFromClient(int clientSock, char* buffer, int bufferSize) {
+bool Server::receiveFromClient(int clientSock, char* buffer, int bufferSize) const {
     int readBytes = recv(clientSock, buffer, bufferSize, 0);
     if (readBytes < 0) {
         perror("error reading from client");
     }
-    return buffer[0] != END;
+    return string(buffer).find(END) == string::npos;
 }
 
 void Server::loadClassified(string fileName) {
     points = decryptClassifiedFile(fileName);
+    if (points.empty()) {
+        cout << "Error loading classified file" << endl;
+        exit(1);
+    }
+
+    if (points.size() < k) {
+        cout << "Error: k is greater than the number of points in the classified file" << endl;
+        exit(1);
+    }
 }
 
 void Server::run() {
-    char buffer[4096];
+    char buffer[1 << 12];
     int clientSock = acceptClient();
-    int expectedDataLen = sizeof(buffer);
-    while (receiveFromClient(clientSock, buffer, expectedDataLen)) {
-        Point p(buffer);
-        string ans = classify(p, this->points, metric, k);
-        sendToClient(clientSock, ans.c_str(), ans.length());
+    if (clientSock == 0) {
+        return;
     }
-    close(clientSock);
+    int expectedDataLen = sizeof(buffer);
+    while (true) {
+        stringstream ss;
+        while (receiveFromClient(clientSock, buffer, expectedDataLen)) {
+            ss << buffer;
+        }
+        ss << buffer;
+        string line;
+        string ans = "";
+        while (getline(ss, line)) {
+            if (line[0] == END) break;
+            Point point(line);
+            if (!isValid(point)) {
+                ans += "Invalid point\n";
+                continue;
+            }
+            string cls = classify(point, points, metric, k);
+            ans += cls + "\n";
+        }
+        ans += END;
+        sendToClient(clientSock, ans.c_str(), ans.length());
+        close(clientSock);
+    }
+}
+
+bool Server::isValid(const Point &point) const {
+    return point.getDimension() == points.begin()->first.getDimension();
 }
